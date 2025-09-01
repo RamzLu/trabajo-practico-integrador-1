@@ -31,3 +31,6 @@ export const Profile = sequelize.define(
     updatedAt: "update_at",
   }
 );
+
+Profile.belongsTo(User, { foreignKey: "user_id" });
+User.hasOne(Profile, { foreignKey: "user_id" });
