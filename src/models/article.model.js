@@ -24,5 +24,5 @@ const Article = sequelize.define(
       type: DataTypes.DATE,
     },
   },
-  {}
+  { createdAt: "created_at", updatedAt: "update_at" }
 );

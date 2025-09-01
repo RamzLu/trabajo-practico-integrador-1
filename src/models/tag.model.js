@@ -10,5 +10,5 @@ const Tag = sequelize.define(
       allowNull: false,
     },
   },
-  {}
+  { createdAt: "created_at", updatedAt: "update_at" }
 );

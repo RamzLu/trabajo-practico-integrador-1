@@ -10,5 +10,5 @@ const article_tag = sequelize.define(
       autoIncrement: true,
     },
   },
-  {}
+  { createdAt: "created_at", updatedAt: "update_at" }
 );

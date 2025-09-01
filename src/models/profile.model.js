@@ -1,7 +1,8 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/batabase.js";
+import { User } from "./user.model.js";
 
-const Profile = sequelize.define(
+export const Profile = sequelize.define(
   "Profile",
   {
     // Model attributes are defined here
@@ -25,5 +26,8 @@ const Profile = sequelize.define(
       type: DataTypes.DATE,
     },
   },
-  {}
+  {
+    createdAt: "created_at",
+    updatedAt: "update_at",
+  }
 );
