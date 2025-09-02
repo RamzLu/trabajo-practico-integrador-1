@@ -1,12 +1,11 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/batabase.js";
-import { Profile } from "./profile.model.js";
 
 export const User = sequelize.define(
   "User",
   {
     // Model attributes are defined here
-    usermame: {
+    username: {
       type: DataTypes.STRING,
       unique: true,
       allowNull: false,
