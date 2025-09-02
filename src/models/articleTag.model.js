@@ -1,8 +1,10 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/batabase.js";
+import { Article } from "./article.model.js";
+import { Tag } from "./tag.model.js";
 
-const article_tag = sequelize.define(
-  "article_tag",
+export const ArticleTag = sequelize.define(
+  "ArticleTag",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -12,3 +14,18 @@ const article_tag = sequelize.define(
   },
   { createdAt: "created_at", updatedAt: "update_at" }
 );
+
+Article.belongsToMany(Tag, {
+  through: ArticleTag,
+  foreignKey: "article_id",
+  as: "tags",
+});
+
+Tag.belongsToMany(Article, {
+  through: ArticleTag,
+  foreignKey: "tag_id",
+  as: "articles",
+});
+
+ArticleTag.belongsTo(Article, { foreignKey: "article_id" });
+ArticleTag.belongsTo(Tag, { foreignKey: "tag_id" });
