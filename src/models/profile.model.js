@@ -32,5 +32,5 @@ export const Profile = sequelize.define(
   }
 );
 
-Profile.belongsTo(User, { foreignKey: "user_id" });
-User.hasOne(Profile, { foreignKey: "user_id" });
+Profile.belongsTo(User, { foreignKey: "user_id", as: "user" });
+User.hasOne(Profile, { foreignKey: "user_id", as: "profile" });
