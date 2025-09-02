@@ -20,6 +20,8 @@ export const Article = sequelize.define(
     },
     status: {
       type: DataTypes.ENUM,
+      values: ["published", "archived"],
+      defaultValue: "published",
     },
     birth_date: {
       type: DataTypes.DATE,
