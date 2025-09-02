@@ -7,7 +7,7 @@ export const getAllUsers = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       mesagge: "Entered the try catch.",
-      error: error.mesagge,
+      error: error.message,
     });
   }
 };
@@ -25,7 +25,7 @@ export const getUserById = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       mesagge: "Entered the try catch.",
-      error: error.mesagge,
+      error: error.message,
     });
   }
 };
@@ -64,7 +64,7 @@ export const updateUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       mesagge: "Entered the try catch.",
-      error: error.mesagge,
+      error: error.message,
     });
   }
 };
@@ -86,7 +86,7 @@ export const deleteUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       mesagge: "Entered the try catch.",
-      error: error.mesagge,
+      error: error.message,
     });
   }
 };
