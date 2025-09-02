@@ -1,8 +1,19 @@
 import { Profile } from "../models/profile.model.js";
+import { User } from "../models/user.model.js";
 
 export const getAllProfiles = async (req, res) => {
   try {
-    const profile = await Profile.findAll(req.body);
+    const profile = await Profile.findAll({
+      attributes: {
+        exclude: ["user_id"],
+      },
+      include: [
+        {
+          model: User,
+          as: "user",
+        },
+      ],
+    });
     return res.status(200).json(profile);
   } catch (error) {
     res.status(500).json({
@@ -14,7 +25,17 @@ export const getAllProfiles = async (req, res) => {
 
 export const getProfileById = async (req, res) => {
   try {
-    const profile = await Profile.findByPk(req.params.id);
+    const profile = await Profile.findByPk(req.params.id, {
+      attributes: {
+        exclude: ["user_id"],
+      },
+      include: [
+        {
+          model: User,
+          as: "user",
+        },
+      ],
+    });
     if (profile) {
       return res.status(200).json(profile);
     } else {
@@ -32,7 +53,18 @@ export const getProfileById = async (req, res) => {
 
 export const createProfile = async (req, res) => {
   try {
-    const profile = await Profile.create(req.body);
+    const newProfile = await Profile.create(req.body);
+    const profile = await Profile.findByPk(newProfile.id, {
+      attributes: {
+        exclude: ["user_id"],
+      },
+      include: [
+        {
+          model: User,
+          as: "user",
+        },
+      ],
+    });
     if (profile) {
       return res.status(201).json(profile);
     } else {
@@ -54,7 +86,17 @@ export const updateProfile = async (req, res) => {
       where: { id: req.params.id },
     });
     if (update) {
-      const profile = await Profile.findByPk(req.params.id);
+      const profile = await Profile.findByPk(req.params.id, {
+        attributes: {
+          exclude: ["user_id"],
+        },
+        include: [
+          {
+            model: User,
+            as: "user",
+          },
+        ],
+      });
       return res.status(200).json({
         mesagge: "The profile has been updated successfully.",
         profile: profile,
