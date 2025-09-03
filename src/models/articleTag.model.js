@@ -27,5 +27,5 @@ Tag.belongsToMany(Article, {
   as: "articles",
 });
 
-ArticleTag.belongsTo(Article, { foreignKey: "article_id" });
-ArticleTag.belongsTo(Tag, { foreignKey: "tag_id" });
+ArticleTag.belongsTo(Article, { foreignKey: "article_id", as: "articles" });
+ArticleTag.belongsTo(Tag, { foreignKey: "tag_id", as: "tags" });
