@@ -49,13 +49,12 @@ export const createUser = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-  const id = req.params.id;
   try {
     const [update] = await User.update(req.body, {
-      where: { id: id },
+      where: { id: req.params.id },
     });
     if (update) {
-      const user = await User.findByPk(id);
+      const user = await User.findByPk(req.params.id);
       return res.status(200).json({
         mesagge: "The user has been updated successfully.",
         user: user,
@@ -70,15 +69,14 @@ export const updateUser = async (req, res) => {
 };
 
 export const deleteUser = async (req, res) => {
-  const id = req.params.id;
   try {
-    const user = await User.findByPk(id);
+    const user = await User.findByPk(req.params.id);
     if (!user) {
       return res.status(404).json({
         mesagge: "User not found",
       });
     }
-    await User.destroy({ where: { id: id } });
+    await User.destroy({ where: { id: req.params.id } });
     return res.status(200).json({
       mesagge: "User deleted successfully.",
       user: user,

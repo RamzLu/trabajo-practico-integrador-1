@@ -6,6 +6,7 @@ import { userRoute } from "./src/routes/user.route.js";
 import { profileRoute } from "./src/routes/profile.route.js";
 import { tagRoute } from "./src/routes/tag.route.js";
 import { articleRoute } from "./src/routes/article.route.js";
+import { articleTagRoute } from "./src/routes/articleTag.route.js";
 // ----------------------------------------------------------------------------------------------------------
 import { User } from "./src/models/user.model.js";
 import { Tag } from "./src/models/tag.model.js";
@@ -21,6 +22,7 @@ app.use("/api", userRoute);
 app.use("/api", profileRoute);
 app.use("/api", tagRoute);
 app.use("/api", articleRoute);
+app.use("/api", articleTagRoute);
 app.listen(PORT, async () => {
   await startDB();
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
