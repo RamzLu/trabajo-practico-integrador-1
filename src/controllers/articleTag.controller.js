@@ -12,11 +12,11 @@ export const getAllArticleTag = async (req, res) => {
       include: [
         {
           model: Tag,
-          as: "tags",
+          as: "tag",
         },
         {
           model: Article,
-          as: "articles",
+          as: "article",
           attributes: { exclude: ["article_tag"] },
           include: [{ model: User, as: "author" }],
         },
@@ -41,13 +41,13 @@ export const getArticleTagById = async (req, res) => {
       include: [
         {
           model: Article,
-          as: "articles",
+          as: "article",
           attributes: { exclude: ["article_tag"] },
           include: [{ model: User, as: "author" }],
         },
         {
           model: Tag,
-          as: "tags",
+          as: "tag",
         },
       ],
     });
@@ -76,13 +76,13 @@ export const createArticleTag = async (req, res) => {
       include: [
         {
           model: Article,
-          as: "articles",
+          as: "article",
           attributes: { exclude: ["article_tag"] },
           include: [{ model: User, as: "author" }],
         },
         {
           model: Tag,
-          as: "tags",
+          as: "tag",
         },
       ],
     });
@@ -111,13 +111,13 @@ export const updateArticleTag = async (req, res) => {
         include: [
           {
             model: Article,
-            as: "articles",
+            as: "article",
             attributes: { exclude: ["article_tag"] },
             include: [{ model: User, as: "author" }],
           },
           {
             model: Tag,
-            as: "tags",
+            as: "tag",
           },
         ],
       });
@@ -143,13 +143,13 @@ export const deleteArticleTag = async (req, res) => {
       include: [
         {
           model: Article,
-          as: "articles",
+          as: "article",
           attributes: { exclude: ["article_tag"] },
           include: [{ model: User, as: "author" }],
         },
         {
           model: Tag,
-          as: "tags",
+          as: "tag",
         },
       ],
     });
