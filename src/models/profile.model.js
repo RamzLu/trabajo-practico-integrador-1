@@ -8,12 +8,10 @@ export const Profile = sequelize.define(
     // Model attributes are defined here
     first_name: {
       type: DataTypes.STRING,
-      unique: true,
       allowNull: false,
     },
     last_name: {
       type: DataTypes.STRING,
-      unique: true,
       allowNull: false,
     },
     biography: {
