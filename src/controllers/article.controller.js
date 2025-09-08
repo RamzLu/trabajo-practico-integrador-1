@@ -1,5 +1,6 @@
 import { Article } from "../models/article.model.js";
 import { User } from "../models/user.model.js";
+import { Profile } from "../models/profile.model.js";
 
 export const getAllArticle = async (req, res) => {
   try {
@@ -133,6 +134,52 @@ export const deleteArticle = async (req, res) => {
       mesagge: "article deleted successfully.",
       article: article,
     });
+  } catch (error) {
+    res.status(500).json({
+      mesagge: "Entered the try catch.",
+      error: error.message,
+    });
+  }
+};
+
+export const getArticlesByUser = async (req, res) => {
+  try {
+    const user_id = req.user.id;
+
+    const articles = await Article.findAll({
+      where: { user_id: user_id },
+      include: [
+        {
+          model: User,
+          as: "author",
+          include: [{ model: Profile, as: "profile" }],
+        },
+      ],
+    });
+    res.status(200).json(articles);
+  } catch (error) {
+    res.status(500).json({
+      mesagge: "Entered the try catch.",
+      error: error.message,
+    });
+  }
+};
+
+export const getArticleByIdForUser = async (req, res) => {
+  try {
+    const user_id = req.user.id;
+    const article_id = req.params.id;
+
+    const article = await Article.findOne({
+      where: { id: article_id, user_id: user_id },
+    });
+    if (!article) {
+      return res
+        .status(404)
+        .json({ msg: "Artículo no encontrado o no te pertenece." });
+    }
+
+    res.status(200).json(article);
   } catch (error) {
     res.status(500).json({
       mesagge: "Entered the try catch.",
