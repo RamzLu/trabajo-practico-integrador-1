@@ -1,16 +1,30 @@
 import { Router } from "express";
 import {
   createArticleTag,
-  getAllArticleTag,
-  getArticleTagById,
-  updateArticleTag,
   deleteArticleTag,
 } from "../controllers/articleTag.controller.js";
-
+import { authMiddleware } from "../middleware/auth.js";
+import { ownerOnly } from "../middleware/authOwnerMiddleware.js";
+import {
+  createArticleTagValidations,
+  deleteArticleTagValidations,
+} from "../middleware/validations/articleTags.validations.js";
+import { validator } from "../middleware/validator.js";
 export const articleTagRoute = Router();
 
-articleTagRoute.get("/articles-tags", getAllArticleTag);
-articleTagRoute.get("/articles-tags/:id", getArticleTagById);
-articleTagRoute.post("/articles-tags", createArticleTag);
-articleTagRoute.put("/articles-tags/:id", updateArticleTag);
-articleTagRoute.delete("/articles-tags/:id", deleteArticleTag);
+articleTagRoute.post(
+  "/articles-tags/:id",
+  authMiddleware,
+  ownerOnly,
+  createArticleTagValidations,
+  validator,
+  createArticleTag
+);
+articleTagRoute.delete(
+  "/articles-tags/:id",
+  authMiddleware,
+  ownerOnly,
+  deleteArticleTagValidations,
+  validator,
+  deleteArticleTag
+);

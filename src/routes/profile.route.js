@@ -2,15 +2,15 @@ import { Router } from "express";
 import {
   getAllProfiles,
   getProfileById,
-  createProfile,
-  updateProfile,
-  deleteprofile,
 } from "../controllers/profile.controller.js";
+import { validator } from "../middleware/validator.js";
+import { getProfileByIDValidation } from "../middleware/validations/profile.validations.js";
 
 export const profileRoute = Router();
-
 profileRoute.get("/profile", getAllProfiles);
-profileRoute.get("/profile/:id", getProfileById);
-profileRoute.post("/profile", createProfile);
-profileRoute.put("/profile/:id", updateProfile);
-profileRoute.delete("/profile/:id", deleteprofile);
+profileRoute.get(
+  "profile/:id",
+  getProfileByIDValidation,
+  validator,
+  getProfileById
+);

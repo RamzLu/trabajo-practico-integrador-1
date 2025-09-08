@@ -8,7 +8,7 @@ import {
 } from "../controllers/tag.controller.js";
 import { authAdminMiddleware } from "../middleware/authAdmin.js";
 import { authMiddleware } from "../middleware/auth.js";
-import validator from "../middleware/validator.js";
+import { validator } from "../middleware/validator.js";
 import {
   createTagValidations,
   deleteTagValidations,
@@ -17,7 +17,17 @@ import {
 } from "../middleware/validations/tag.validations.js";
 export const tagRoute = Router();
 
+tagRoute.post(
+  "/tags",
+  createTagValidations,
+  validator,
+  authMiddleware,
+  authAdminMiddleware,
+  createTag
+);
+
 tagRoute.get("/tags", authMiddleware, getAllTag);
+
 tagRoute.get(
   "/tags/:id",
   authMiddleware,
@@ -25,14 +35,6 @@ tagRoute.get(
   getTagByIDValidation,
   validator,
   getTagById
-);
-tagRoute.post(
-  "/tags",
-  authMiddleware,
-  authAdminMiddleware,
-  createTagValidations,
-  validator,
-  createTag
 );
 tagRoute.put(
   "/tags/:id",

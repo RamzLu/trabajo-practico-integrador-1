@@ -1,18 +1,17 @@
 import { Router } from "express";
 import {
-  createUser,
   deleteUser,
   getAllUsers,
   getUserById,
-  // updateUser,
+  updateUser,
 } from "../controllers/user.controller.js";
 import { authAdminMiddleware } from "../middleware/authAdmin.js";
 import { authMiddleware } from "../middleware/auth.js";
-import validator from "../middleware/validator.js";
+import { validator } from "../middleware/validator.js";
 import {
-  createUserValidation,
   deleteUserValidation,
   getUserByIdValidation,
+  updateUserValidation,
 } from "../middleware/validations/user.validations.js";
 export const userRoute = Router();
 
@@ -27,18 +26,18 @@ userRoute.get(
   getUserById
 );
 
-userRoute.post(
-  "/users",
-  authAdminMiddleware,
-  createUserValidation,
+userRoute.put(
+  "/users/:id",
+  updateUserValidation,
   validator,
-  createUser
+  authMiddleware,
+  authAdminMiddleware,
+  updateUser
 );
-
-// userRoute.put("/users/:id", authMiddleware, authAdminMiddleware, updateUser);
 
 userRoute.delete(
   "/users/:id",
+  authMiddleware,
   authAdminMiddleware,
   deleteUserValidation,
   validator,
