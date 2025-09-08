@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import { Profile } from "../models/profile.model.js";
 import { User } from "../models/user.model.js";
 import { comparePassword, hashPassword } from "../helpers/bcrypt.helper.js";
+import { generateToken } from "../helpers/jwt.helper.js";
 
 export const register = async (req, res) => {
   const {
@@ -13,6 +14,7 @@ export const register = async (req, res) => {
     biography,
     avatar_url,
     birth_date,
+    role,
   } = req.body;
   try {
     const hashedPassword = await hashPassword(password);
@@ -21,6 +23,7 @@ export const register = async (req, res) => {
       username: username,
       email: email,
       password: hashedPassword,
+      role: role,
     });
 
     await Profile.create({
@@ -31,6 +34,7 @@ export const register = async (req, res) => {
       birth_date: birth_date,
       user_id: user.id,
     });
+
     res.status(201).json({
       msg: "usuario creado correctamente",
     });
@@ -69,17 +73,9 @@ export const login = async (req, res) => {
         msg: "El usuario o la contraseña no coincide",
       });
     }
-    const token = jwt.sign(
-      {
-        id: user.id,
-        first_name: user.profile.first_name,
-        last_name: user.profile.last_name,
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "1h",
-      }
-    );
+
+    const token = generateToken(user);
+
     // Enviar token como cookie
     res.cookie("token", token, {
       httpOnly: true,
@@ -103,11 +99,33 @@ export const logout = async (req, res) => {
 };
 
 export const profile = async (req, res) => {
-  const user = req.userLogged;
+  const user = req.user;
   try {
     res.status(200).json({
       first_name: user.first_name,
       last_name: user.last_name,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+      msg: "Error interno del servidor",
+    });
+  }
+};
+
+export const updateProfileAuthenticate = async (req, res) => {
+  try {
+    const user_id = req.user.id;
+    const profile = await Profile.findOne({ where: { user_id: user_id } });
+    if (!profile) {
+      return res.status(404).json({
+        msg: "Perfil no encontrado",
+      });
+    }
+    await Profile.update(req.body);
+    return res.status(201).json({
+      message: "Profile updated",
+      profile: profile,
     });
   } catch (error) {
     res.status(500).json({
