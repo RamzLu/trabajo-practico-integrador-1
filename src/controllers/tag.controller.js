@@ -1,3 +1,4 @@
+import { ArticleTag } from "../models/articleTag.model.js";
 import { Tag } from "../models/tag.model.js";
 
 export const getAllTag = async (req, res) => {
@@ -14,7 +15,14 @@ export const getAllTag = async (req, res) => {
 
 export const getTagById = async (req, res) => {
   try {
-    const tag = await Tag.findByPk(req.params.id);
+    const tag = await Tag.findByPk(req.params.id, {
+      include: [
+        {
+          model: ArticleTag,
+          as: "article",
+        },
+      ],
+    });
     if (tag) {
       return res.status(200).json(tag);
     } else {
