@@ -1,6 +1,5 @@
 import { body, param } from "express-validator";
 import { Profile } from "../../models/profile.model.js";
-import { User } from "../../models/user.model.js";
 
 export const createProfileValidations = [
   body("first_name")
@@ -19,24 +18,6 @@ export const createProfileValidations = [
     .isLength({ min: 2, max: 50 })
     .withMessage("El apellido debe tener entre 2 y 50 caracteres.")
     .trim(),
-  body("user_id")
-    .notEmpty()
-    .withMessage("El ID del usuario es obligatorio.")
-    .isInt({ gt: 0 })
-    .withMessage("El ID del usuario debe ser un entero positivo.")
-    .custom(async (value) => {
-      // verificar que el usuario exista
-      const user = await User.findByPk(value);
-      if (!user) {
-        throw new Error("El usuario especificado no existe.");
-      }
-      // verificar que el usuario no tenga ya un perfil
-      const profile = await Profile.findOne({ where: { user_id: value } });
-      if (profile) {
-        throw new Error("Este usuario ya tiene un perfil asociado.");
-      }
-      return true;
-    }),
   body("biography")
     .optional()
     .isString()
@@ -58,17 +39,6 @@ export const createProfileValidations = [
 ];
 
 export const updateProfileValidations = [
-  param("id")
-    .isInt({ gt: 0 })
-    .withMessage("El ID del perfil en la URL debe ser un entero positivo.")
-    .custom(async (value) => {
-      const profile = await Profile.findByPk(value);
-      if (!profile) {
-        throw new Error("El perfil que intenta actualizar no existe.");
-      }
-      return true;
-    }),
-
   body("first_name")
     .optional()
     .isString()
