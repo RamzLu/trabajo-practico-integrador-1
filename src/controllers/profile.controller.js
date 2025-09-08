@@ -82,26 +82,14 @@ export const createProfile = async (req, res) => {
 
 export const updateProfile = async (req, res) => {
   try {
-    const [update] = await Profile.update(req.body, {
-      where: { id: req.params.id },
+    const profile = await Profile.findOne({ where: { user_id: req.user.id } });
+    console.log(req.body);
+
+    await profile.update(req.body);
+
+    return res.status(200).json({
+      mesagge: "The profile has been updated successfully.",
     });
-    if (update) {
-      const profile = await Profile.findByPk(req.params.id, {
-        attributes: {
-          exclude: ["user_id"],
-        },
-        include: [
-          {
-            model: User,
-            as: "user",
-          },
-        ],
-      });
-      return res.status(200).json({
-        mesagge: "The profile has been updated successfully.",
-        profile: profile,
-      });
-    }
   } catch (error) {
     res.status(500).json({
       mesagge: "Entered the try catch.",
