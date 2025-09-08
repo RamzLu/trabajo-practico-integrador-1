@@ -8,12 +8,10 @@ export const Profile = sequelize.define(
     // Model attributes are defined here
     first_name: {
       type: DataTypes.STRING,
-      unique: true,
       allowNull: false,
     },
     last_name: {
       type: DataTypes.STRING,
-      unique: true,
       allowNull: false,
     },
     biography: {
@@ -32,5 +30,18 @@ export const Profile = sequelize.define(
   }
 );
 
-Profile.belongsTo(User, { foreignKey: "user_id" });
-User.hasOne(Profile, { foreignKey: "user_id" });
+Profile.belongsTo(User, {
+  foreignKey: "user_id",
+  as: "user",
+  onDelete: "CASCADE",
+});
+
+User.addHook("afterDestroy", async (user) => {
+  const profile = await Profile.findOne({
+    where: { user_id: user.dataValues.id },
+  });
+  if (profile) {
+    await profile.destroy();
+  }
+});
+User.hasOne(Profile, { foreignKey: "user_id", as: "profile" });

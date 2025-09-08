@@ -1,7 +1,8 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/batabase.js";
+import { User } from "./user.model.js";
 
-const Article = sequelize.define(
+export const Article = sequelize.define(
   "Article",
   {
     title: {
@@ -19,6 +20,8 @@ const Article = sequelize.define(
     },
     status: {
       type: DataTypes.ENUM,
+      values: ["published", "archived"],
+      defaultValue: "published",
     },
     birth_date: {
       type: DataTypes.DATE,
@@ -26,3 +29,6 @@ const Article = sequelize.define(
   },
   { createdAt: "created_at", updatedAt: "update_at" }
 );
+
+Article.belongsTo(User, { foreignKey: "user_id", as: "author" });
+User.hasMany(Article, { foreignKey: "user_id", as: "articles" });

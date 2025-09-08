@@ -1,0 +1,120 @@
+import { Profile } from "../models/profile.model.js";
+import { User } from "../models/user.model.js";
+
+export const getAllProfiles = async (req, res) => {
+  try {
+    const profile = await Profile.findAll({
+      attributes: {
+        exclude: ["user_id"],
+      },
+      include: [
+        {
+          model: User,
+          as: "user",
+        },
+      ],
+    });
+    return res.status(200).json(profile);
+  } catch (error) {
+    res.status(500).json({
+      mesagge: "Entered the try catch.",
+      error: error.message,
+    });
+  }
+};
+
+export const getProfileById = async (req, res) => {
+  try {
+    const profile = await Profile.findByPk(req.params.id, {
+      attributes: {
+        exclude: ["user_id"],
+      },
+      include: [
+        {
+          model: User,
+          as: "user",
+        },
+      ],
+    });
+    if (profile) {
+      return res.status(200).json(profile);
+    } else {
+      return res.status(404).json({
+        message: "The profile could not be found or does not exist.",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      mesagge: "Entered the try catch.",
+      error: error.message,
+    });
+  }
+};
+
+export const createProfile = async (req, res) => {
+  try {
+    const newProfile = await Profile.create(req.body);
+    const profile = await Profile.findByPk(newProfile.id, {
+      attributes: {
+        exclude: ["user_id"],
+      },
+      include: [
+        {
+          model: User,
+          as: "user",
+        },
+      ],
+    });
+    if (profile) {
+      return res.status(201).json(profile);
+    } else {
+      return res.status(400).json({
+        message: "Profile could not be created.",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      mesagge: "Entered the try catch.",
+      error: error.message,
+    });
+  }
+};
+
+export const updateProfile = async (req, res) => {
+  try {
+    const profile = await Profile.findOne({ where: { user_id: req.user.id } });
+    console.log(req.body);
+
+    await profile.update(req.body);
+
+    return res.status(200).json({
+      mesagge: "The profile has been updated successfully.",
+    });
+  } catch (error) {
+    res.status(500).json({
+      mesagge: "Entered the try catch.",
+      error: error.message,
+    });
+  }
+};
+
+export const deleteprofile = async (req, res) => {
+  try {
+    const profile = await Profile.findByPk(req.params.id);
+    if (!profile) {
+      return res.status(404).json({
+        mesagge: "Profile not found",
+      });
+    }
+    await Profile.destroy({ where: { id: req.params.id } });
+    return res.status(200).json({
+      mesagge: "Profile deleted successfully.",
+      profile: profile,
+    });
+  } catch (error) {
+    res.status(500).json({
+      mesagge: "Entered the try catch.",
+      error: error.message,
+    });
+  }
+};
